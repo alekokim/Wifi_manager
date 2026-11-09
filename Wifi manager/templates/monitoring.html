@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% set title = "Network monitoring" %}
+{% block content %}
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">LIVE ACTIVITY</p>
+    <h1>Network monitoring</h1>
+    <p class="muted">Periodically checks the local network for devices joining or leaving.</p>
+  </div>
+</section>
+<section class="panel monitor-panel">
+  <div class="monitor-status">
+    <span class="status-dot {{ 'online' if monitor.running else 'offline' }}"></span>
+    <div><strong>{{ "Monitoring is running" if monitor.running else "Monitoring is stopped" }}</strong><span class="muted">Scan interval: 30 seconds</span></div>
+  </div>
+  <div class="button-row">
+    {% if monitor.running %}
+    <form method="post" action="{{ url_for('stop_monitoring') }}"><input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"><button class="button secondary" type="submit">Stop monitoring</button></form>
+    {% else %}
+    <form method="post" action="{{ url_for('start_monitoring') }}"><input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"><button class="button primary" type="submit">Start monitoring</button></form>
+    {% endif %}
+    <a class="button secondary" href="{{ url_for('events') }}">View event history</a>
+  </div>
+</section>
+<section class="panel log-panel">
+  <div class="panel-heading"><div><p class="eyebrow">RECENT ACTIVITY</p><h2>Monitor log</h2></div><span class="muted">{{ logs|length }} entries</span></div>
+  {% if logs %}
+  <ol class="log-list">{% for log in logs|reverse %}<li>{{ log }}</li>{% endfor %}</ol>
+  {% else %}
+  <div class="empty-inline">No monitoring activity yet. Start monitoring to see status messages here.</div>
+  {% endif %}
+</section>
+{% endblock %}

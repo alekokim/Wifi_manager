@@ -1,0 +1,7 @@
+{
+  "devices": [
+    { "mac": "24:ee:9a:7b:1a:a6", "name": "Admin Laptop" },
+    { "mac": "12:34:56:78:90:ab", "name": "Living Room Phone" },
+    { "mac": "cc:dd:ee:ff:00:11", "name": "Smart TV" }
+  ]
+}

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  {% if page == "monitoring" and monitor.running %}
+  <meta http-equiv="refresh" content="10">
+  {% endif %}
+  <title>{{ title|default("Wi-Fi Manager") }} · Wi-Fi Manager</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('dashboard') }}">
+      <span class="brand-mark" aria-hidden="true">W</span>
+      <span>Wi-Fi Manager</span>
+    </a>
+    <details class="menu">
+      <summary aria-label="Open navigation">Menu</summary>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a class="{{ 'active' if page == 'dashboard' else '' }}" href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a class="{{ 'active' if page == 'devices' else '' }}" href="{{ url_for('devices') }}">Connected devices</a>
+        <a class="{{ 'active' if page == 'device-details' else '' }}" href="{{ url_for('device_details') }}">Device details</a>
+        <a class="{{ 'active' if page == 'device-history' else '' }}" href="{{ url_for('device_history') }}">Device history</a>
+        <a class="{{ 'active' if page == 'events' else '' }}" href="{{ url_for('events') }}">Event history</a>
+        <a class="{{ 'active' if page == 'scan' else '' }}" href="{{ url_for('scan') }}">Network scan</a>
+        <a class="{{ 'active' if page == 'monitoring' else '' }}" href="{{ url_for('monitoring') }}">Monitoring</a>
+        <form method="post" action="{{ url_for('logout') }}" class="logout-form">
+          <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+          <button class="nav-logout" type="submit">Sign out</button>
+        </form>
+      </nav>
+    </details>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-list" aria-live="polite">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">Local network only · Keep this computer connected to your Wi-Fi</footer>
+</body>
+</html>

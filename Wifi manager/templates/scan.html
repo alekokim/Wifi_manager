@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% set title = "Network scan" %}
+{% block content %}
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">LOCAL NETWORK</p>
+    <h1>Network scan</h1>
+    <p class="muted">Scan only the subnet attached to the server's active network adapter.</p>
+  </div>
+</section>
+{% if network_error %}
+  <div class="notice error"><strong>Network unavailable.</strong> {{ network_error }}</div>
+{% endif %}
+<section class="panel scan-panel">
+  <div class="scan-visual" aria-hidden="true"><span>⌁</span></div>
+  <div>
+    <h2>Scan the current Wi-Fi</h2>
+    {% if details %}
+    <p class="muted">The scan will check <strong>{{ details.network }}</strong> from this computer at {{ details.local_ip }}.</p>
+    {% else %}
+    <p class="muted">Connect the Windows computer to the Wi-Fi network you want to scan.</p>
+    {% endif %}
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+      <button class="button primary" type="submit" {% if not details %}disabled{% endif %}>Start scan</button>
+    </form>
+    <p class="subtle">Scanning may take a little while. Keep this page open until it finishes.</p>
+  </div>
+</section>
+{% endblock %}

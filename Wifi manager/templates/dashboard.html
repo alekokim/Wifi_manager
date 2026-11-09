@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% set title = "Dashboard" %}
+{% block content %}
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">OVERVIEW</p>
+    <h1>Network dashboard</h1>
+    <p class="muted">Your Wi-Fi network at a glance.</p>
+  </div>
+  <a class="button primary" href="{{ url_for('scan') }}">Scan network</a>
+</section>
+
+{% if network_error %}
+  <div class="notice error"><strong>Network unavailable.</strong> {{ network_error }}</div>
+{% endif %}
+
+<section class="stat-grid" aria-label="Network summary">
+  <article class="stat-card">
+    <span class="stat-label">Current network</span>
+    <strong class="stat-value">{{ active_network or "Unavailable" }}</strong>
+    <span class="stat-hint">{{ details.local_ip if details else "Check the server's Wi-Fi connection" }}</span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-label">Devices found</span>
+    <strong class="stat-value">{{ online_count }}</strong>
+    <a class="stat-hint" href="{{ url_for('devices') }}">View connected devices</a>
+  </article>
+  <article class="stat-card">
+    <span class="stat-label">Monitoring</span>
+    <strong class="stat-value"><span class="status-dot {{ 'online' if monitor.running else 'offline' }}"></span>{{ "Running" if monitor.running else "Stopped" }}</strong>
+    <a class="stat-hint" href="{{ url_for('monitoring') }}">Manage monitoring</a>
+  </article>
+</section>
+
+<section class="panel">
+  <div class="panel-heading">
+    <div>
+      <p class="eyebrow">CONNECTION</p>
+      <h2>Network information</h2>
+    </div>
+  </div>
+  {% if details %}
+  <dl class="info-grid">
+    <div><dt>Local IP address</dt><dd>{{ details.local_ip }}</dd></div>
+    <div><dt>Subnet mask</dt><dd>{{ details.subnet_mask }}</dd></div>
+    <div><dt>Gateway</dt><dd>{{ details.gateway }}</dd></div>
+    <div><dt>Network range</dt><dd>{{ details.network }}</dd></div>
+    <div><dt>Broadcast address</dt><dd>{{ details.broadcast }}</dd></div>
+  </dl>
+  {% else %}
+  <p class="muted">Network information will appear when the server is connected to Wi-Fi.</p>
+  {% endif %}
+</section>
+{% endblock %}

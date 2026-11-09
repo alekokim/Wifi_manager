@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% set title = "Connected devices" %}
+{% block content %}
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">LIVE NETWORK</p>
+    <h1>Connected devices</h1>
+    <p class="muted">Current scan results{% if network %} on {{ network }}{% endif %}.</p>
+  </div>
+  <form method="post" action="{{ url_for('scan') }}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <button class="button primary" type="submit">Refresh scan</button>
+  </form>
+</section>
+{% if devices %}
+<section class="device-grid">
+  {% for device in devices %}
+  <article class="device-card">
+    <div class="device-card-head">
+      <span class="device-icon" aria-hidden="true">●</span>
+      <span class="badge online">ONLINE</span>
+    </div>
+    <h2>{{ device.name or "Unknown device" }}</h2>
+    <dl class="device-info">
+      <div><dt>IP address</dt><dd>{{ device.ip }}</dd></div>
+      <div><dt>MAC address</dt><dd>{{ device.mac }}</dd></div>
+    </dl>
+  </article>
+  {% endfor %}
+</section>
+{% else %}
+<section class="empty-state">
+  <span class="empty-icon" aria-hidden="true">⌁</span>
+  <h2>No current scan results</h2>
+  <p class="muted">Scan your local network to find devices. Results are held in memory until the next scan or server restart.</p>
+  <a class="button primary" href="{{ url_for('scan') }}">Go to network scan</a>
+</section>
+{% endif %}
+{% endblock %}
